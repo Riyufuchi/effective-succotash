@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace DatabaseApp.Database
 {
+    public enum EmployeeType
+    {
+        Cheff,
+        Waiter,
+        Cleaner
+    }
+
     internal class Entities
     {
     }
@@ -15,6 +22,7 @@ namespace DatabaseApp.Database
         public int Id { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
+        public required EmployeeType Type { get; set; }
 
         // Navigation property for the address
         public int AddressId { get; set; }

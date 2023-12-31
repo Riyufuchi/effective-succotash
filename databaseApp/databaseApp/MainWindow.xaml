@@ -6,8 +6,8 @@
         mc:Ignorable="d"
         Title="DatabazeSemestralka" Height="600" Width="800">
     <Window.Resources>
-        <!-- Define the CollectionToStringConverter -->
         <local:CollectionToStringConverter x:Key="CollectionToStringConverter" />
+        <local:EmpEnum x:Key="EmpEnum"/>
     </Window.Resources>
     <Grid>
         <Menu>
@@ -32,6 +32,7 @@
                 <MenuItem Header="Delete" Click="DeleteEmployee"/>
             </MenuItem>
             <MenuItem Header="Database">
+                <MenuItem Header="Add dummy data" Click="AddDummyData"/>
                 <MenuItem Header="Clear Employees" Click="Delete_Employees"/>
             </MenuItem>
         </Menu>
@@ -44,6 +45,7 @@
                         <!-- <DataGridTextColumn Header="ID" Binding="{Binding Id}"/> -->
                         <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
                         <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"/>
+                        <DataGridTextColumn Header="Job" Binding="{Binding Type}"/>
                         <!-- Define a DataGridTemplateColumn for Shifts -->
                         <DataGridTemplateColumn Header="Shifts">
                             <DataGridTemplateColumn.CellTemplate>
@@ -63,6 +65,13 @@
                     <!-- Define columns for Shift properties -->
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Shift Name" Binding="{Binding ShiftName}"/>
+                        <DataGridTemplateColumn Header="Emps on shift">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Shifts, Converter={StaticResource EmpEnum}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <!-- Add more columns for other Shift properties -->
                     </DataGrid.Columns>
                 </DataGrid>

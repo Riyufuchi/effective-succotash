@@ -22,7 +22,6 @@ namespace DatabaseApp.Controller
             Employees = DatabaseLoader.LoadData();
             Shifts = DatabaseLoader.LoadShifts();
             Addresses = DatabaseLoader.LoadAddresses();
-            //AddTestEmployee();
         }
 
         // Tahle to prozatim staci
@@ -67,33 +66,40 @@ namespace DatabaseApp.Controller
             RefreshDataGrid();
         }
 
-        private void AddTestEmployee()
+        public void AddDummyEmployee()
         {
             using (var context = new AppDbContext())
             {
+                var shift = new Shift()
+                {
+                    ShiftName = "Obědová"
+                };
+                var address = new Address
+                {
+                    Street = "123 Main St",
+                    City = "Anytown",
+                    State = "CA",
+                    ZipCode = "12345"
+                };
                 var testEmployee = new Employee
                 {
                     FirstName = "John",
                     LastName = "Doe",
-                    Address = new Address
-                    {
-                        Street = "123 Main St",
-                        City = "Anytown",
-                        State = "CA",
-                        ZipCode = "12345"
-                    },
+                    Type = EmployeeType.Waiter,
+                    Address = address,
                     Shifts = new Collection<Shift>
                     {
-                        new() { ShiftName = "Morning Shift" },
-                        new() { ShiftName = "Evening Shift" }
+                        shift
                     }
                 };
+                shift.Employees.Add(testEmployee);
 
                 context.Employees.Add(testEmployee);
+                context.Shifts.Add(shift);
+                context.Addresses.Add(address);
                 context.SaveChanges();
-
-                Employees = DatabaseLoader.LoadData();
             }
+            RefreshDataGrid();
         }
     }
 }

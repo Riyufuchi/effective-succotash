@@ -52,5 +52,10 @@ namespace DatabaseApp
         {
 
         }
+
+        private void AddDummyData(object sender, RoutedEventArgs e)
+        {
+            controller.AddDummyEmployee();
+        }
     }
 }
