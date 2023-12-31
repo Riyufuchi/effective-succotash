@@ -11,7 +11,6 @@ namespace DatabaseApp.Database
     internal class Context
     {
     }
-    // Example: AppDbContext.cs
 
     public class AppDbContext : DbContext
     {
@@ -21,9 +20,7 @@ namespace DatabaseApp.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // SQLite connection string, assuming a local file named "database.db"
             optionsBuilder.UseSqlite("Data Source=database.db");
         }
     }
-
 }

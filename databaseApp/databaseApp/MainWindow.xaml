@@ -12,9 +12,24 @@
     <Grid>
         <Menu>
             <MenuItem Header="File">
-                <MenuItem Header="No file, it is a DB" />
-                <Separator />
+                <MenuItem Header="Open" />
+                <Separator/>
                 <MenuItem Header="Exit" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="Employees">
+                <MenuItem Header="Add" Click="AddEmployee"/>
+                <MenuItem Header="Edit" Click="EditEmployee"/>
+                <MenuItem Header="Delete" Click="DeleteEmployee"/>
+            </MenuItem>
+            <MenuItem Header="Shifts">
+                <MenuItem Header="Add" Click="AddEmployee"/>
+                <MenuItem Header="Edit" Click="EditEmployee"/>
+                <MenuItem Header="Delete" Click="DeleteEmployee"/>
+            </MenuItem>
+            <MenuItem Header="Addresses">
+                <MenuItem Header="Add" Click="AddEmployee"/>
+                <MenuItem Header="Edit" Click="EditEmployee"/>
+                <MenuItem Header="Delete" Click="DeleteEmployee"/>
             </MenuItem>
             <MenuItem Header="Database">
                 <MenuItem Header="Clear Employees" Click="Delete_Employees"/>

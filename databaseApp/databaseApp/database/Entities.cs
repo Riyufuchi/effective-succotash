@@ -10,7 +10,6 @@ namespace DatabaseApp.Database
     {
     }
 
-    // Employee.cs
     public class Employee
     {
         public int Id { get; set; }
@@ -25,7 +24,6 @@ namespace DatabaseApp.Database
         public ICollection<Shift> Shifts { get; set; } = new List<Shift>();
     }
 
-    // Address.cs
     public class Address
     {
         public int Id { get; set; }
@@ -37,14 +35,12 @@ namespace DatabaseApp.Database
         // Navigation property for employees
         public ICollection<Employee>? Employees { get; set; }
 
-        // Override ToString method
         public override string ToString()
         {
-            return $"Street:{Street}, City:{City}, State:{State}, ZipCode:{ZipCode}";
+            return $"{Street} {City} {State} {ZipCode}";
         }
     }
 
-    // Example: Shift.cs
     public class Shift
     {
         public int Id { get; set; }

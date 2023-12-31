@@ -8,7 +8,7 @@ namespace DatabaseApp.Database
 {
     public class DatabaseLoader
     {
-        public ObservableCollection<Employee> LoadData()
+        public static ObservableCollection<Employee> LoadData()
         {
             using (var dbContext = new AppDbContext())
             {
@@ -23,13 +23,25 @@ namespace DatabaseApp.Database
             }
         }
 
-        public ObservableCollection<Shift> LoadShifts()
+        public static ObservableCollection<Shift> LoadShifts()
         {
             using (var dbContext = new AppDbContext())
             {
                 dbContext.Database.Migrate();
                 return new ObservableCollection<Shift>(
                     dbContext.Shifts
+                        .Include(e => e.Employees)
+                        .ToList());
+            }
+        }
+
+        public static ObservableCollection<Address> LoadAddresses()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                dbContext.Database.Migrate();
+                return new ObservableCollection<Address>(
+                    dbContext.Addresses
                         .Include(e => e.Employees)
                         .ToList());
             }

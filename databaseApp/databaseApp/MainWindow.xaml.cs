@@ -1,4 +1,5 @@
 ﻿using DatabaseApp.Controller;
+using DatabaseApp.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Windows;
@@ -29,13 +30,27 @@ namespace DatabaseApp
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            // Close the application when Exit is clicked
             Close();
         }
 
         private void Delete_Employees(object sender, RoutedEventArgs e)
         {
             controller.DeleteEmployees();
+        }
+
+        private void AddEmployee(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EditEmployee(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteEmployee(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

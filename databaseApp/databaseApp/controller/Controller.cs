@@ -11,51 +11,64 @@ namespace DatabaseApp.Controller
 {
     public class ControllerDB
     {
-        private readonly DatabaseLoader databaseLoader;
+        //private readonly DatabaseLoader databaseLoader;
         public ObservableCollection<Employee> Employees { get; set; }
         public ObservableCollection<Shift> Shifts { get; set; }
+        public ObservableCollection<Address> Addresses { get; set; }
 
         public ControllerDB()
         {
-            databaseLoader = new DatabaseLoader();
-            Employees = databaseLoader.LoadData();
-            Shifts = databaseLoader.LoadShifts();
+            //databaseLoader = new DatabaseLoader();
+            Employees = DatabaseLoader.LoadData();
+            Shifts = DatabaseLoader.LoadShifts();
+            Addresses = DatabaseLoader.LoadAddresses();
             //AddTestEmployee();
+        }
+
+        // Tahle to prozatim staci
+        public void RefreshDataGrid()
+        {
+            Employees.Clear();
+            Shifts.Clear();
+            Addresses.Clear();
+            using (var dbContext = new AppDbContext())
+            {
+                var employees = dbContext.Employees.ToList();
+                var shifts = dbContext.Shifts.ToList();
+                var addresses = dbContext.Addresses.ToList();
+
+                foreach (var employee in employees)
+                {
+                    Employees.Add(employee);
+                }
+                foreach (var data in shifts)
+                {
+                    Shifts.Add(data);
+                }
+                foreach (var data in addresses)
+                {
+                    Addresses.Add(data);
+                }
+            }
         }
 
         public void DeleteEmployees()
         {
             using (var dbContext = new AppDbContext())
             {
-                // Retrieve all employees
-                var sh = dbContext.Shifts.ToList();
-
-                // Remove all employees from the Employees table
-                dbContext.Shifts.RemoveRange(sh);
-
-                // Save changes to the database
-                dbContext.SaveChanges();
-
-                // Retrieve all employees with their shifts
                 var allEmployees = dbContext.Employees.Include(e => e.Shifts).ToList();
-
-                // Remove all shifts associated with employees
                 foreach (var employee in allEmployees)
                 {
                     dbContext.Shifts.RemoveRange(employee.Shifts);
                 }
-
-                // Remove all employees from the Employees table
                 dbContext.Employees.RemoveRange(allEmployees);
-
-                // Save changes to the database
                 dbContext.SaveChanges();
             }
+            RefreshDataGrid();
         }
 
         private void AddTestEmployee()
         {
-            // Add a test employee to the database
             using (var context = new AppDbContext())
             {
                 var testEmployee = new Employee
@@ -79,8 +92,7 @@ namespace DatabaseApp.Controller
                 context.Employees.Add(testEmployee);
                 context.SaveChanges();
 
-                // Reload data after adding the test employee
-                Employees = databaseLoader.LoadData();
+                Employees = DatabaseLoader.LoadData();
             }
         }
     }
