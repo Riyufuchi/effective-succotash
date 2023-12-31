@@ -1,5 +1,4 @@
 ﻿// Example: DatabaseLoader.cs
-using databaseApp.database;
 using DatabaseApp.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
@@ -19,7 +18,19 @@ namespace DatabaseApp.Database
                 return new ObservableCollection<Employee>(
                     dbContext.Employees
                         .Include(e => e.Address)
-                        .Include(e => e.Shift)
+                        .Include(e => e.Shifts)
+                        .ToList());
+            }
+        }
+
+        public ObservableCollection<Shift> LoadShifts()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                dbContext.Database.Migrate();
+                return new ObservableCollection<Shift>(
+                    dbContext.Shifts
+                        .Include(e => e.Employees)
                         .ToList());
             }
         }

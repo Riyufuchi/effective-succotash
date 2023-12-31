@@ -21,9 +21,8 @@ namespace DatabaseApp.Database
         public int AddressId { get; set; }
         public required Address Address { get; set; }
 
-        // Navigation property for the shift
-        public int ShiftId { get; set; }
-        public required Shift Shift { get; set; }
+        // Navigation property for the shifts
+        public ICollection<Shift> Shifts { get; set; } = new List<Shift>();
     }
 
     // Address.cs
@@ -37,6 +36,12 @@ namespace DatabaseApp.Database
 
         // Navigation property for employees
         public ICollection<Employee>? Employees { get; set; }
+
+        // Override ToString method
+        public override string ToString()
+        {
+            return $"Street:{Street}, City:{City}, State:{State}, ZipCode:{ZipCode}";
+        }
     }
 
     // Example: Shift.cs
@@ -46,6 +51,6 @@ namespace DatabaseApp.Database
         public required string ShiftName { get; set; }
 
         // Navigation property for employees
-        public ICollection<Employee>? Employees { get; set; }
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
     }
 }

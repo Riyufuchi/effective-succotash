@@ -1,5 +1,5 @@
-﻿using databaseApp.database;
-using DatabaseApp.Database;
+﻿using DatabaseApp.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,19 +12,45 @@ namespace DatabaseApp.Controller
     public class ControllerDB
     {
         private readonly DatabaseLoader databaseLoader;
-        public ObservableCollection<Employee> People { get; set; }
+        public ObservableCollection<Employee> Employees { get; set; }
+        public ObservableCollection<Shift> Shifts { get; set; }
 
         public ControllerDB()
         {
             databaseLoader = new DatabaseLoader();
-            People = databaseLoader.LoadData();
-            AddTestEmployee();
+            Employees = databaseLoader.LoadData();
+            Shifts = databaseLoader.LoadShifts();
+            //AddTestEmployee();
         }
 
-        public ControllerDB(DatabaseLoader databaseLoader, ObservableCollection<Employee> people)
+        public void DeleteEmployees()
         {
-            this.databaseLoader = databaseLoader;
-            People = people;
+            using (var dbContext = new AppDbContext())
+            {
+                // Retrieve all employees
+                var sh = dbContext.Shifts.ToList();
+
+                // Remove all employees from the Employees table
+                dbContext.Shifts.RemoveRange(sh);
+
+                // Save changes to the database
+                dbContext.SaveChanges();
+
+                // Retrieve all employees with their shifts
+                var allEmployees = dbContext.Employees.Include(e => e.Shifts).ToList();
+
+                // Remove all shifts associated with employees
+                foreach (var employee in allEmployees)
+                {
+                    dbContext.Shifts.RemoveRange(employee.Shifts);
+                }
+
+                // Remove all employees from the Employees table
+                dbContext.Employees.RemoveRange(allEmployees);
+
+                // Save changes to the database
+                dbContext.SaveChanges();
+            }
         }
 
         private void AddTestEmployee()
@@ -43,9 +69,10 @@ namespace DatabaseApp.Controller
                         State = "CA",
                         ZipCode = "12345"
                     },
-                    Shift = new Shift
+                    Shifts = new Collection<Shift>
                     {
-                        ShiftName = "Day Shift"
+                        new() { ShiftName = "Morning Shift" },
+                        new() { ShiftName = "Evening Shift" }
                     }
                 };
 
@@ -53,7 +80,7 @@ namespace DatabaseApp.Controller
                 context.SaveChanges();
 
                 // Reload data after adding the test employee
-                People = databaseLoader.LoadData();
+                Employees = databaseLoader.LoadData();
             }
         }
     }

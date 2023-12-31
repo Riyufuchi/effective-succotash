@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace databaseApp.database
+namespace DatabaseApp.Database
 {
     internal class Context
     {
@@ -23,20 +23,6 @@ namespace databaseApp.database
         {
             // SQLite connection string, assuming a local file named "database.db"
             optionsBuilder.UseSqlite("Data Source=database.db");
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Define relationships, constraints, etc., if needed
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Address)
-                .WithOne()
-                .HasForeignKey<Employee>(e => e.AddressId);
-
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Shift)
-                .WithMany()
-                .HasForeignKey(e => e.ShiftId);
         }
     }
 
