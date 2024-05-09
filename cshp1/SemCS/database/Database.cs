@@ -86,6 +86,20 @@ namespace SemCS
             }
         }
 
+        public void AddGarage(Garage garage)
+        {
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = new SQLiteCommand("INSERT INTO Garaz (Kapacita, VolnaMista, AdresaId) VALUES (@Kapacita, @VolnaMista, @AdresaId)", connection);
+                cmd.Parameters.AddWithValue("@Kapacita", garage.Capacity);
+                cmd.Parameters.AddWithValue("@VolnaMista", garage.FreeSpots);
+                cmd.Parameters.AddWithValue("@AdresaId", garage.Address.Id);
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
         #endregion
 
         #region Update
@@ -110,7 +124,29 @@ namespace SemCS
             }
         }
 
+        public void UpdateGarage(Garage garage)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "UPDATE Garaz SET Kapacita = @Kapacita, VolnaMista = @VolnaMista, AdresaId = @AdresaId WHERE Id = @Id";
+
+                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Kapacita", garage.Capacity);
+                    command.Parameters.AddWithValue("@VolnaMista", garage.FreeSpots);
+                    command.Parameters.AddWithValue("@AdresaId", garage.AddressId);
+                    command.Parameters.AddWithValue("@Id", garage.Id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         #endregion
+
+        #region Select
 
         public Address? SelectAddress(int id)
         {
@@ -134,6 +170,55 @@ namespace SemCS
 
             return null; // Address with the specified ID not found
         }
+
+        public List<Address> SelectAddress()
+        {
+            List<Address> addresses = new List<Address>();
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Adresa", connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            addresses.Add(new Address(Convert.ToInt32(reader["Id"]), reader["Mesto"].ToString(),
+                                reader["Ulice"].ToString(), Convert.ToInt32(reader["CP"])));
+                        }
+                    }
+                }
+            }
+
+            return addresses;
+        }
+
+        public Garage? SelectGarage(int id)
+        {
+            Address? address = null;
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Garaz WHERE Id = @Id", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            address = SelectAddress(Convert.ToInt32(reader["AdresaId"]));
+                            return new Garage(Convert.ToInt32(reader["Id"]), Convert.ToInt32(reader["Kapacita"]),
+                                Convert.ToInt32(reader["VolnaMista"]), address.Id, address);;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        #endregion
 
         private void InitializeDatabase()
         {

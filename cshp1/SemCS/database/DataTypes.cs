@@ -9,7 +9,7 @@ namespace SemCS
 {
     public class Vehicle
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string LicensePlate { get; set; }
         public string Brand { get; set; }
         public int SeatCount { get; set; }
@@ -30,7 +30,7 @@ namespace SemCS
 
     public class Driver
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Salary { get; set; }
@@ -65,12 +65,19 @@ namespace SemCS
 
     public class Address
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string City { get; set; }
         public string Street { get; set; }
         public int HouseNumber { get; set; }
 
         // public Address() { }
+
+        public Address(string city, string street, int houseNumber)
+        {
+            City = city;
+            Street = street;
+            HouseNumber = houseNumber;
+        }
 
         public Address(int id, string city, string street, int houseNumber)
         {
@@ -80,17 +87,15 @@ namespace SemCS
             HouseNumber = houseNumber;
         }
 
-        public Address(string city, string street, int houseNumber)
+        public override string ToString()
         {
-            City = city;
-            Street = street;
-            HouseNumber = houseNumber;
+            return City + " " + Street + " " + HouseNumber;
         }
     }
 
     public class Garage
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public int Capacity { get; set; }
         public int FreeSpots { get; set; }
         public int AddressId { get; set; }
@@ -100,6 +105,15 @@ namespace SemCS
 
         public Garage(int capacity, int freeSpots, int addressId, Address Address)
         {
+            Capacity = capacity;
+            FreeSpots = freeSpots;
+            this.Address = Address;
+            AddressId = addressId;
+        }
+
+        public Garage(int id, int capacity, int freeSpots, int addressId, Address Address)
+        {
+            Id = id;
             Capacity = capacity;
             FreeSpots = freeSpots;
             this.Address = Address;

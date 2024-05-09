@@ -18,23 +18,28 @@
 
         private void InitializeComponent()
         {
+            dataGridView1 = new DataGridView();
             menuStrip1 = new MenuStrip();
             databaseToolStripMenuItem = new ToolStripMenuItem();
+            addAdressToolStripMenuItem = new ToolStripMenuItem();
+            addGarangeToolStripMenuItem = new ToolStripMenuItem();
             windowToolStripMenuItem = new ToolStripMenuItem();
             taby = new TabControl();
             tabPage1 = new TabPage();
-            dataGridView1 = new DataGridView();
             tabPage2 = new TabPage();
             dataGridView2 = new DataGridView();
             tabPage3 = new TabPage();
             dataGridView3 = new DataGridView();
             tabPage4 = new TabPage();
             dataGridView4 = new DataGridView();
-            addAdressToolStripMenuItem = new ToolStripMenuItem();
+            adressToolStripMenuItem = new ToolStripMenuItem();
+            garazToolStripMenuItem = new ToolStripMenuItem();
+            ridicToolStripMenuItem = new ToolStripMenuItem();
+            vozidloToolStripMenuItem = new ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             taby.SuspendLayout();
             tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             tabPage3.SuspendLayout();
@@ -42,6 +47,20 @@
             tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView4).BeginInit();
             SuspendLayout();
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Dock = DockStyle.Fill;
+            dataGridView1.Location = new Point(3, 3);
+            dataGridView1.MultiSelect = false;
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dataGridView1.Size = new Size(786, 542);
+            dataGridView1.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -53,16 +72,32 @@
             // 
             // databaseToolStripMenuItem
             // 
-            databaseToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addAdressToolStripMenuItem });
+            databaseToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addAdressToolStripMenuItem, addGarangeToolStripMenuItem });
             databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
             databaseToolStripMenuItem.Size = new Size(67, 20);
             databaseToolStripMenuItem.Text = "Database";
             // 
+            // addAdressToolStripMenuItem
+            // 
+            addAdressToolStripMenuItem.Name = "addAdressToolStripMenuItem";
+            addAdressToolStripMenuItem.Size = new Size(143, 22);
+            addAdressToolStripMenuItem.Text = "Add Adress";
+            addAdressToolStripMenuItem.Click += addAdressToolStripMenuItem_Click;
+            // 
+            // addGarangeToolStripMenuItem
+            // 
+            addGarangeToolStripMenuItem.Name = "addGarangeToolStripMenuItem";
+            addGarangeToolStripMenuItem.Size = new Size(143, 22);
+            addGarangeToolStripMenuItem.Text = "Add Garange";
+            addGarangeToolStripMenuItem.Click += addGarangeToolStripMenuItem_Click;
+            // 
             // windowToolStripMenuItem
             // 
+            windowToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { adressToolStripMenuItem, garazToolStripMenuItem, vozidloToolStripMenuItem, ridicToolStripMenuItem });
             windowToolStripMenuItem.Name = "windowToolStripMenuItem";
-            windowToolStripMenuItem.Size = new Size(63, 20);
-            windowToolStripMenuItem.Text = "Window";
+            windowToolStripMenuItem.Size = new Size(54, 20);
+            windowToolStripMenuItem.Text = "Search";
+            windowToolStripMenuItem.Click += windowToolStripMenuItem_Click;
             // 
             // taby
             // 
@@ -87,18 +122,6 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Adresa";
             tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(3, 3);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(786, 542);
-            dataGridView1.TabIndex = 0;
             // 
             // tabPage2
             // 
@@ -169,12 +192,29 @@
             dataGridView4.Size = new Size(786, 542);
             dataGridView4.TabIndex = 0;
             // 
-            // addAdressToolStripMenuItem
+            // adressToolStripMenuItem
             // 
-            addAdressToolStripMenuItem.Name = "addAdressToolStripMenuItem";
-            addAdressToolStripMenuItem.Size = new Size(180, 22);
-            addAdressToolStripMenuItem.Text = "Add Adress";
-            addAdressToolStripMenuItem.Click += addAdressToolStripMenuItem_Click;
+            adressToolStripMenuItem.Name = "adressToolStripMenuItem";
+            adressToolStripMenuItem.Size = new Size(180, 22);
+            adressToolStripMenuItem.Text = "Adress";
+            // 
+            // garazToolStripMenuItem
+            // 
+            garazToolStripMenuItem.Name = "garazToolStripMenuItem";
+            garazToolStripMenuItem.Size = new Size(112, 22);
+            garazToolStripMenuItem.Text = "Garaz";
+            // 
+            // ridicToolStripMenuItem
+            // 
+            ridicToolStripMenuItem.Name = "ridicToolStripMenuItem";
+            ridicToolStripMenuItem.Size = new Size(112, 22);
+            ridicToolStripMenuItem.Text = "Ridic";
+            // 
+            // vozidloToolStripMenuItem
+            // 
+            vozidloToolStripMenuItem.Name = "vozidloToolStripMenuItem";
+            vozidloToolStripMenuItem.Size = new Size(112, 22);
+            vozidloToolStripMenuItem.Text = "Vozidlo";
             // 
             // Form1
             // 
@@ -186,11 +226,11 @@
             MainMenuStrip = menuStrip1;
             Name = "Form1";
             Text = "Vozový park DB";
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             taby.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             tabPage3.ResumeLayout(false);
@@ -211,5 +251,10 @@
         private DataGridView dataGridView3;
         private DataGridView dataGridView4;
         private ToolStripMenuItem addAdressToolStripMenuItem;
+        private ToolStripMenuItem addGarangeToolStripMenuItem;
+        private ToolStripMenuItem adressToolStripMenuItem;
+        private ToolStripMenuItem garazToolStripMenuItem;
+        private ToolStripMenuItem vozidloToolStripMenuItem;
+        private ToolStripMenuItem ridicToolStripMenuItem;
     }
 }
