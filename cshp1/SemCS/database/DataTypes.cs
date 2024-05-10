@@ -119,6 +119,11 @@ namespace SemCS
             this.Address = Address;
             AddressId = addressId;
         }
+
+        public override string ToString()
+        {
+            return Capacity + "/" + FreeSpots + " " + Address.ToString();
+        }
     }
 
 }

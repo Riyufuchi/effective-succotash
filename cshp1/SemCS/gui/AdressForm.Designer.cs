@@ -49,7 +49,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 33);
+            label2.Location = new Point(12, 38);
             label2.Name = "label2";
             label2.Size = new Size(36, 15);
             label2.TabIndex = 1;
@@ -58,7 +58,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 60);
+            label3.Location = new Point(12, 67);
             label3.Name = "label3";
             label3.Size = new Size(81, 15);
             label3.TabIndex = 2;
@@ -66,7 +66,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(98, 86);
+            button1.Location = new Point(98, 93);
             button1.Name = "button1";
             button1.Size = new Size(188, 23);
             button1.TabIndex = 3;
@@ -76,14 +76,14 @@
             // 
             // textBoxNumber
             // 
-            textBoxNumber.Location = new Point(98, 57);
+            textBoxNumber.Location = new Point(98, 64);
             textBoxNumber.Name = "textBoxNumber";
             textBoxNumber.Size = new Size(188, 23);
             textBoxNumber.TabIndex = 4;
             // 
             // textBoxStreet
             // 
-            textBoxStreet.Location = new Point(98, 30);
+            textBoxStreet.Location = new Point(98, 35);
             textBoxStreet.Name = "textBoxStreet";
             textBoxStreet.Size = new Size(188, 23);
             textBoxStreet.TabIndex = 5;
@@ -99,7 +99,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(298, 124);
+            ClientSize = new Size(298, 126);
             Controls.Add(textBoxCity);
             Controls.Add(textBoxStreet);
             Controls.Add(textBoxNumber);

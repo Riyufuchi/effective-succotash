@@ -50,5 +50,12 @@ namespace SemCS.gui
             }
             Dispose();
         }
+
+        private void numericUpDownKapacita_ValueChanged(object sender, EventArgs e)
+        {
+            if (Garage == null)
+                numericUpDownVolnaMista.Value = numericUpDownKapacita.Value;
+
+        }
     }
 }

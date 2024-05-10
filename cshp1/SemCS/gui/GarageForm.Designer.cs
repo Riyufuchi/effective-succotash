@@ -66,6 +66,7 @@
             numericUpDownKapacita.Size = new Size(213, 23);
             numericUpDownKapacita.TabIndex = 4;
             numericUpDownKapacita.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownKapacita.ValueChanged += numericUpDownKapacita_ValueChanged;
             // 
             // comboBoxAdresa
             // 

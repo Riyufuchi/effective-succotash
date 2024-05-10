@@ -123,5 +123,17 @@ namespace SemCS
         {
 
         }
+
+        private void addVehicleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<Garage> garages = db.SelectFreeGarages();
+            if (garages.Count == 0)
+            {
+                Controller.ErrorDialog("V databazi nejsou žádné volné garáže!");
+                return;
+            }
+            VehicleForm vf = new VehicleForm(garages, null);
+            vf.ShowDialog(this);
+        }
     }
 }
