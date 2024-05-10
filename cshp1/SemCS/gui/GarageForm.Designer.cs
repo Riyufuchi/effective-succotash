@@ -35,6 +35,7 @@
             button1 = new Button();
             numericUpDownVolnaMista = new NumericUpDown();
             label2 = new Label();
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDownKapacita).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownVolnaMista).BeginInit();
             SuspendLayout();
@@ -103,11 +104,22 @@
             label2.TabIndex = 1;
             label2.Text = "Volna mista";
             // 
+            // button2
+            // 
+            button2.Location = new Point(12, 92);
+            button2.Name = "button2";
+            button2.Size = new Size(68, 23);
+            button2.TabIndex = 8;
+            button2.Text = "Remove";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // GarageForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(319, 135);
+            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(comboBoxAdresa);
             Controls.Add(numericUpDownVolnaMista);
@@ -132,5 +144,6 @@
         private Button button1;
         private NumericUpDown numericUpDownVolnaMista;
         private Label label2;
+        private Button button2;
     }
 }

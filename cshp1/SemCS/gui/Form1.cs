@@ -91,10 +91,18 @@ namespace SemCS
         {
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow clickedRow = dataGridView1.Rows[e.RowIndex];
+                DataGridViewRow clickedRow = dataGridView2.Rows[e.RowIndex];
 
                 GarageForm garageForm = new GarageForm(db.SelectAddress(), db.SelectGarage(Int32.Parse(clickedRow.Cells["Id"].Value.ToString())));
                 garageForm.ShowDialog(this);
+                if (garageForm.Delete)
+                {
+                    db.RemoveGarage(garageForm.Garage);
+                    RefreshGarages();
+                    RefreshVehicles();
+                    return;
+
+                }
                 garageBuffer = garageForm.Garage;
                 if (garageBuffer != null)
                 {
@@ -114,6 +122,13 @@ namespace SemCS
                 List<Garage> garages = db.SelectFreeGarages();
                 VehicleForm vf = new VehicleForm(garages, db.SelectVehicle(Int32.Parse(clickedRow.Cells["Id"].Value.ToString())));
                 vf.ShowDialog(this);
+                if (vf.Delete)
+                {
+                    db.RemoveVehicle(vf.Vehicle);
+                    RefreshVehicles();
+                    RefreshGarages();
+                    return;
+                }
                 garageBuffer = vf.Garage;
                 vehicleBuffer = vf.Vehicle;
                 if (vehicleBuffer != null)

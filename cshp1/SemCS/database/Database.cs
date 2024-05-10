@@ -28,8 +28,11 @@ namespace SemCS
             connectionString = $"Data Source={dbPath};Version=3;";
             InitializeDatabase();
             Connection = new SQLiteConnection(connectionString);
-            //Adapter = new SQLiteDataAdapter(Connection.CreateCommand());
         }
+
+
+
+        #region Load
 
         public void LoadAdresses(DataSet dataSet)
         {
@@ -39,8 +42,6 @@ namespace SemCS
             adapter.Fill(dataSet, "Adresa");
             Connection.Close();
         }
-        
-        #region Load
 
         public void LoadGaranges(DataSet dataSet)
         {
@@ -69,6 +70,46 @@ namespace SemCS
             Connection.Close();
         }
         #endregion
+
+        #region Remove
+
+        public void RemoveVehicle(Vehicle vehicle)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Vozidlo WHERE Id = @Id", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", vehicle.Id);
+                    if (command.ExecuteNonQuery() > 0)
+                        UpdateGarage(vehicle.GarageId, 1);
+                }
+                connection.Close();
+            }
+        }
+
+        public void RemoveGarage(Garage garage)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Garaz WHERE Id = @Id", connection))
+                {
+                    List<Vehicle> v = SelectVehicle();
+                    foreach (Vehicle vehicle in v)
+                    {
+                        if (vehicle.GarageId == garage.Id)
+                            RemoveVehicle(vehicle);
+                    }
+                    command.Parameters.AddWithValue("@Id", garage.Id);
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+        }
+
+        #endregion
+
 
         #region Add
 
@@ -247,6 +288,29 @@ namespace SemCS
                 }
             }
             return null;
+        }
+
+        public List<Vehicle> SelectVehicle()
+        {
+            List<Vehicle> vehicles = new List<Vehicle>();
+            Garage? garage = null;
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Vozidlo", connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            garage = SelectGarage(Convert.ToInt32(reader["GarazId"]));
+                            vehicles.Add(new Vehicle(Convert.ToInt32(reader["Id"]), reader["SPZ"].ToString(),
+                                 reader["Znacka"].ToString(), Convert.ToInt32(reader["PocetMist"]), garage.Id, garage));
+                        }
+                    }
+                }
+            }
+            return vehicles;
         }
 
         public List<Address> SelectAddress()

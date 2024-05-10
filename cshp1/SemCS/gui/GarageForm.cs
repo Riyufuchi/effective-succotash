@@ -14,6 +14,7 @@ namespace SemCS.gui
     public partial class GarageForm : Form
     {
         public Garage? Garage { get; private set; }
+        public bool Delete { get; private set; }
 
         public GarageForm(List<Address> addresses, Garage? garage)
         {
@@ -21,6 +22,8 @@ namespace SemCS.gui
             comboBoxAdresa.DataSource = addresses;
             comboBoxAdresa.SelectedIndex = 0;
             Garage = garage;
+            Delete = false;
+            numericUpDownVolnaMista.Enabled = false;
             if (garage != null)
             {
                 button1.Text = "Edit";
@@ -30,7 +33,6 @@ namespace SemCS.gui
             }
             else
             {
-                numericUpDownVolnaMista.Enabled = false;
                 button1.Text = "Add";
             }
         }
@@ -39,6 +41,8 @@ namespace SemCS.gui
         {
             if (Garage != null)
             {
+                if (numericUpDownKapacita.Value - numericUpDownVolnaMista.Value < numericUpDownVolnaMista.Value)
+                    Controller.ErrorDialog("Nelze mít počet míst menší než je počet vozidel v garáži!");
                 Garage.Capacity = (int)numericUpDownKapacita.Value;
                 Garage.FreeSpots = (int)numericUpDownVolnaMista.Value;
                 Garage.Address = comboBoxAdresa.SelectedItem as Address;
@@ -56,6 +60,12 @@ namespace SemCS.gui
             if (Garage == null)
                 numericUpDownVolnaMista.Value = numericUpDownKapacita.Value;
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Delete = true;
+            Dispose();
         }
     }
 }

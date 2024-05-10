@@ -37,6 +37,7 @@
             numericUpDown1 = new NumericUpDown();
             comboBox1 = new ComboBox();
             button1 = new Button();
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
@@ -110,19 +111,30 @@
             // 
             // button1
             // 
-            button1.Location = new Point(63, 127);
+            button1.Location = new Point(161, 127);
             button1.Name = "button1";
-            button1.Size = new Size(263, 23);
+            button1.Size = new Size(165, 23);
             button1.TabIndex = 8;
             button1.Text = "button1";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(12, 128);
+            button2.Name = "button2";
+            button2.Size = new Size(143, 23);
+            button2.TabIndex = 9;
+            button2.Text = "Delete";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // VehicleForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(341, 163);
+            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(comboBox1);
             Controls.Add(numericUpDown1);
@@ -150,5 +162,6 @@
         private NumericUpDown numericUpDown1;
         private ComboBox comboBox1;
         private Button button1;
+        private Button button2;
     }
 }

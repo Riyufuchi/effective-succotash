@@ -14,12 +14,14 @@ namespace SemCS.gui
     {
         public Vehicle? Vehicle { get; private set; }
         public Garage? Garage { get; private set; }
+        public bool Delete { get; private set; }
 
         public VehicleForm(List<Garage> garages, Vehicle? vehicle)
         {
             InitializeComponent();
             Vehicle = vehicle;
             this.comboBox1.DataSource = garages;
+            Delete = false;
             if (vehicle != null)
             {
                 textBox1.Text = Vehicle.LicensePlate;
@@ -56,6 +58,12 @@ namespace SemCS.gui
                 Vehicle = new Vehicle(textBox1.Text, textBox2.Text, (int)numericUpDown1.Value,
                     (comboBox1.SelectedItem as Garage).Id, comboBox1.SelectedItem as Garage);
             }
+            Dispose();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Delete = true;
             Dispose();
         }
     }
