@@ -11,6 +11,7 @@ namespace SemCS
         private Database db;
         private Address? adressBuffer;
         private Garage? garageBuffer;
+        private Vehicle? vehicleBuffer;
 
         public Form1()
         {
@@ -32,6 +33,7 @@ namespace SemCS
             db.LoadVehicles(dataSet);
             dataGridView3.DataSource = dataSet.Tables[2];
             dataGridView3.Columns[0].Visible = false;
+            dataGridView3.CellClick += dataGridView3_CellClick;
             // Ridici
             db.LoadDrivers(dataSet);
             dataGridView4.DataSource = dataSet.Tables[3];
@@ -39,10 +41,33 @@ namespace SemCS
             adressBuffer = null;
         }
 
+        private void RefreshVehicles()
+        {
+            dataSet.Tables[2].Rows.Clear();
+            db.LoadVehicles(dataSet);
+            dataGridView3.Refresh();
+        }
+
+        private void RefreshGarages()
+        {
+            dataSet.Tables[1].Rows.Clear();
+            db.LoadGaranges(dataSet);
+            dataGridView2.Refresh();
+        }
+
+        private void RefreshAdresses()
+        {
+            dataSet.Tables[0].Rows.Clear();
+            db.LoadAdresses(dataSet);
+            dataGridView1.Refresh();
+        }
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
+
+        #region Edits
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -57,9 +82,7 @@ namespace SemCS
                 {
                     db.UpdateAddress(adressBuffer);
                     Controller.SuccesDialog("Uspesně aktualizována data adresy");
-                    dataSet.Tables[0].Rows.Clear();
-                    db.LoadAdresses(dataSet);
-                    dataGridView1.Refresh();
+                    RefreshAdresses();
                 }
             }
         }
@@ -77,12 +100,38 @@ namespace SemCS
                 {
                     db.UpdateGarage(garageBuffer);
                     Controller.SuccesDialog("Uspesně aktualizována data garaze");
-                    dataSet.Tables[1].Rows.Clear();
-                    db.LoadGaranges(dataSet);
-                    dataGridView2.Refresh();
+                    RefreshGarages();
                 }
             }
         }
+
+        private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow clickedRow = dataGridView3.Rows[e.RowIndex];
+
+                List<Garage> garages = db.SelectFreeGarages();
+                VehicleForm vf = new VehicleForm(garages, db.SelectVehicle(Int32.Parse(clickedRow.Cells["Id"].Value.ToString())));
+                vf.ShowDialog(this);
+                garageBuffer = vf.Garage;
+                vehicleBuffer = vf.Vehicle;
+                if (vehicleBuffer != null)
+                {
+                    db.UpdateVehicle(vehicleBuffer);
+                    if (garageBuffer.Id != vehicleBuffer.GarageId)
+                    {
+                        db.UpdateGarage(garageBuffer.Id, 1);
+                        db.UpdateGarage(vehicleBuffer.GarageId, -1);
+                    }
+
+                    RefreshVehicles();
+                    RefreshGarages();
+                }
+            }
+        }
+
+        #endregion
 
         private void addAdressToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -93,9 +142,7 @@ namespace SemCS
             {
                 db.AddAddress(adressBuffer);
                 MessageBox.Show("Pridano uspesne");
-                dataSet.Tables[0].Rows.Clear();
-                db.LoadAdresses(dataSet);
-                dataGridView1.Refresh();
+                RefreshAdresses();
             }
         }
 
@@ -113,9 +160,7 @@ namespace SemCS
             {
                 db.AddGarage(garageBuffer);
                 MessageBox.Show("Pridano uspesne");
-                dataSet.Tables[1].Rows.Clear();
-                db.LoadGaranges(dataSet);
-                dataGridView2.Refresh();
+                RefreshGarages();
             }
         }
 
@@ -134,6 +179,14 @@ namespace SemCS
             }
             VehicleForm vf = new VehicleForm(garages, null);
             vf.ShowDialog(this);
+            vehicleBuffer = vf.Vehicle;
+            if (vehicleBuffer != null)
+            {
+                db.AddVehicle(vehicleBuffer);
+                RefreshVehicles();
+                RefreshGarages();
+               
+            }
         }
     }
 }

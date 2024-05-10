@@ -26,6 +26,16 @@ namespace SemCS
             GarageId = garageId;
             this.Garage = garage;
         }
+
+        public Vehicle(int id, string licensePlate, string brand, int seatCount, int garageId, Garage garage)
+        {
+            Id = id;
+            LicensePlate = licensePlate;
+            Brand = brand;
+            SeatCount = seatCount;
+            GarageId = garageId;
+            this.Garage = garage;
+        }
     }
 
     public class Driver

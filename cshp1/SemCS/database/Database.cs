@@ -105,13 +105,13 @@ namespace SemCS
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
-                var cmd = new SQLiteCommand("INSERT INTO Vozidlo (SPZ, Znacka, PocetMist, GarazId) VALUE" +
-                    " (@SPZ, @Znacka, @PocetMist, @GarazId)", connection);
+                var cmd = new SQLiteCommand("INSERT INTO Vozidlo (SPZ, Znacka, PocetMist, GarazId) VALUES (@SPZ, @Znacka, @PocetMist, @GarazId)", connection);
                 cmd.Parameters.AddWithValue("@SPZ", vehicle.LicensePlate);
                 cmd.Parameters.AddWithValue("@Znacka", vehicle.Brand);
                 cmd.Parameters.AddWithValue("@PocetMist",vehicle.SeatCount);
                 cmd.Parameters.AddWithValue("@GarazId", vehicle.Garage.Id);
                 cmd.ExecuteNonQuery();
+                UpdateGarage(vehicle.GarageId, -1);
                 connection.Close();
             }
         }
@@ -134,6 +134,24 @@ namespace SemCS
                     command.Parameters.AddWithValue("@Street", address.Street);
                     command.Parameters.AddWithValue("@Number", address.HouseNumber);
                     command.Parameters.AddWithValue("@Id", address.Id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateGarage(int id, int value)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "UPDATE Garaz SET VolnaMista = VolnaMista + @value WHERE Id = @Id";
+
+                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@value", value);
+                    command.Parameters.AddWithValue("@Id", id);
 
                     command.ExecuteNonQuery();
                 }
@@ -175,7 +193,6 @@ namespace SemCS
                     command.Parameters.AddWithValue("@PocetMist", vehicle.SeatCount);
                     command.Parameters.AddWithValue("@GarazId", vehicle.GarageId);
                     command.Parameters.AddWithValue("@Id", vehicle.Id);
-
                     command.ExecuteNonQuery();
                 }
             }
@@ -207,6 +224,29 @@ namespace SemCS
             }
 
             return null; // Address with the specified ID not found
+        }
+
+        public Vehicle? SelectVehicle(int id)
+        {
+            Garage? garage = null;
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Vozidlo WHERE Id = @Id", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            garage = SelectGarage(Convert.ToInt32(reader["GarazId"]));
+                            return new Vehicle(Convert.ToInt32(reader["Id"]), reader["SPZ"].ToString(),
+                                 reader["Znacka"].ToString(), Convert.ToInt32(reader["PocetMist"]), garage.Id, garage);                        }
+                    }
+                }
+            }
+            return null;
         }
 
         public List<Address> SelectAddress()
