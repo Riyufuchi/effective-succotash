@@ -6,11 +6,13 @@ namespace SemCS
     public partial class AdressForm : Form
     {
         public Address? Address { get; private set; }
+        public bool Remove {  get; private set; }
 
         public AdressForm(Address? address)
         {
             InitializeComponent();
             Address = address;
+            Remove = false;
             if (address != null)
             {
                 // If editing an existing address, set button text to "Edit"
@@ -53,6 +55,12 @@ namespace SemCS
 
             // Close the form
             this.Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Remove = true;
+            Dispose();
         }
     }
 }

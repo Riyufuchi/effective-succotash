@@ -26,9 +26,6 @@
             addVehicleToolStripMenuItem = new ToolStripMenuItem();
             addDriverToolStripMenuItem = new ToolStripMenuItem();
             windowToolStripMenuItem = new ToolStripMenuItem();
-            adressToolStripMenuItem = new ToolStripMenuItem();
-            garazToolStripMenuItem = new ToolStripMenuItem();
-            vozidloToolStripMenuItem = new ToolStripMenuItem();
             ridicToolStripMenuItem = new ToolStripMenuItem();
             taby = new TabControl();
             tabPage1 = new TabPage();
@@ -38,6 +35,9 @@
             dataGridView3 = new DataGridView();
             tabPage4 = new TabPage();
             dataGridView4 = new DataGridView();
+            adresaToolStripMenuItem = new ToolStripMenuItem();
+            garazToolStripMenuItem = new ToolStripMenuItem();
+            vozidloToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             taby.SuspendLayout();
@@ -82,62 +82,44 @@
             // addAdressToolStripMenuItem
             // 
             addAdressToolStripMenuItem.Name = "addAdressToolStripMenuItem";
-            addAdressToolStripMenuItem.Size = new Size(180, 22);
+            addAdressToolStripMenuItem.Size = new Size(136, 22);
             addAdressToolStripMenuItem.Text = "Add Adress";
             addAdressToolStripMenuItem.Click += addAdressToolStripMenuItem_Click;
             // 
             // addGarangeToolStripMenuItem
             // 
             addGarangeToolStripMenuItem.Name = "addGarangeToolStripMenuItem";
-            addGarangeToolStripMenuItem.Size = new Size(180, 22);
+            addGarangeToolStripMenuItem.Size = new Size(136, 22);
             addGarangeToolStripMenuItem.Text = "Add Garage";
             addGarangeToolStripMenuItem.Click += addGarangeToolStripMenuItem_Click;
             // 
             // addVehicleToolStripMenuItem
             // 
             addVehicleToolStripMenuItem.Name = "addVehicleToolStripMenuItem";
-            addVehicleToolStripMenuItem.Size = new Size(180, 22);
+            addVehicleToolStripMenuItem.Size = new Size(136, 22);
             addVehicleToolStripMenuItem.Text = "Add Vehicle";
             addVehicleToolStripMenuItem.Click += addVehicleToolStripMenuItem_Click;
             // 
             // addDriverToolStripMenuItem
             // 
             addDriverToolStripMenuItem.Name = "addDriverToolStripMenuItem";
-            addDriverToolStripMenuItem.Size = new Size(180, 22);
+            addDriverToolStripMenuItem.Size = new Size(136, 22);
             addDriverToolStripMenuItem.Text = "Add Driver";
             addDriverToolStripMenuItem.Click += addDriverToolStripMenuItem_Click;
             // 
             // windowToolStripMenuItem
             // 
-            windowToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { adressToolStripMenuItem, garazToolStripMenuItem, vozidloToolStripMenuItem, ridicToolStripMenuItem });
+            windowToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { adresaToolStripMenuItem, garazToolStripMenuItem, vozidloToolStripMenuItem, ridicToolStripMenuItem });
             windowToolStripMenuItem.Name = "windowToolStripMenuItem";
             windowToolStripMenuItem.Size = new Size(54, 20);
             windowToolStripMenuItem.Text = "Search";
-            windowToolStripMenuItem.Click += windowToolStripMenuItem_Click;
-            // 
-            // adressToolStripMenuItem
-            // 
-            adressToolStripMenuItem.Name = "adressToolStripMenuItem";
-            adressToolStripMenuItem.Size = new Size(112, 22);
-            adressToolStripMenuItem.Text = "Adress";
-            // 
-            // garazToolStripMenuItem
-            // 
-            garazToolStripMenuItem.Name = "garazToolStripMenuItem";
-            garazToolStripMenuItem.Size = new Size(112, 22);
-            garazToolStripMenuItem.Text = "Garaz";
-            // 
-            // vozidloToolStripMenuItem
-            // 
-            vozidloToolStripMenuItem.Name = "vozidloToolStripMenuItem";
-            vozidloToolStripMenuItem.Size = new Size(112, 22);
-            vozidloToolStripMenuItem.Text = "Vozidlo";
             // 
             // ridicToolStripMenuItem
             // 
             ridicToolStripMenuItem.Name = "ridicToolStripMenuItem";
-            ridicToolStripMenuItem.Size = new Size(112, 22);
+            ridicToolStripMenuItem.Size = new Size(180, 22);
             ridicToolStripMenuItem.Text = "Ridic";
+            ridicToolStripMenuItem.Click += ridicToolStripMenuItem_Click;
             // 
             // taby
             // 
@@ -232,6 +214,27 @@
             dataGridView4.Size = new Size(786, 542);
             dataGridView4.TabIndex = 0;
             // 
+            // adresaToolStripMenuItem
+            // 
+            adresaToolStripMenuItem.Name = "adresaToolStripMenuItem";
+            adresaToolStripMenuItem.Size = new Size(180, 22);
+            adresaToolStripMenuItem.Text = "Adresa";
+            adresaToolStripMenuItem.Click += adresaToolStripMenuItem_Click;
+            // 
+            // garazToolStripMenuItem
+            // 
+            garazToolStripMenuItem.Name = "garazToolStripMenuItem";
+            garazToolStripMenuItem.Size = new Size(180, 22);
+            garazToolStripMenuItem.Text = "Garaz";
+            garazToolStripMenuItem.Click += garazToolStripMenuItem_Click;
+            // 
+            // vozidloToolStripMenuItem
+            // 
+            vozidloToolStripMenuItem.Name = "vozidloToolStripMenuItem";
+            vozidloToolStripMenuItem.Size = new Size(180, 22);
+            vozidloToolStripMenuItem.Text = "Vozidlo";
+            vozidloToolStripMenuItem.Click += vozidloToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -240,6 +243,7 @@
             Controls.Add(taby);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
+            MinimumSize = new Size(800, 600);
             Name = "Form1";
             Text = "Vozový park DB";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -268,11 +272,11 @@
         private DataGridView dataGridView4;
         private ToolStripMenuItem addAdressToolStripMenuItem;
         private ToolStripMenuItem addGarangeToolStripMenuItem;
-        private ToolStripMenuItem adressToolStripMenuItem;
-        private ToolStripMenuItem garazToolStripMenuItem;
-        private ToolStripMenuItem vozidloToolStripMenuItem;
         private ToolStripMenuItem ridicToolStripMenuItem;
         private ToolStripMenuItem addVehicleToolStripMenuItem;
         private ToolStripMenuItem addDriverToolStripMenuItem;
+        private ToolStripMenuItem adresaToolStripMenuItem;
+        private ToolStripMenuItem garazToolStripMenuItem;
+        private ToolStripMenuItem vozidloToolStripMenuItem;
     }
 }

@@ -72,11 +72,6 @@ namespace SemCS
             dataGridView4.Refresh();
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         #region Edits
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -88,10 +83,17 @@ namespace SemCS
                 AdressForm af = new AdressForm(db.SelectAddress(Int32.Parse(clickedRow.Cells["Id"].Value.ToString())));
                 af.ShowDialog(this);
                 adressBuffer = af.Address;
+                if (af.Remove)
+                {
+                    db.RemoveAdress(af.Address);
+                    RefreshAdresses();
+                    RefreshDrivers();
+                    RefreshGarages();
+                    RefreshVehicles();
+                }
                 if (adressBuffer != null)
                 {
                     db.UpdateAddress(adressBuffer);
-                    Controller.SuccesDialog("Uspesně aktualizována data adresy");
                     RefreshAdresses();
                 }
             }
@@ -117,7 +119,6 @@ namespace SemCS
                 if (garageBuffer != null)
                 {
                     db.UpdateGarage(garageBuffer);
-                    Controller.SuccesDialog("Uspesně aktualizována data garaze");
                     RefreshGarages();
                 }
             }
@@ -215,11 +216,6 @@ namespace SemCS
             }
         }
 
-        private void windowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void addVehicleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<Garage> garages = db.SelectFreeGarages();
@@ -282,6 +278,48 @@ namespace SemCS
                 db.AddDriver(driverBuffer);
                 RefreshDrivers();
             }
+        }
+
+        private void DetailView(string tableName, DataGridView dgv)
+        {
+            if (dataSet.Tables[0].Rows.Count == 0)
+            {
+                Controller.ErrorDialog("V dabatazi nejsou žádné adresy!\nPřidejte nejříve alespoň jednu adresu.");
+                return;
+            }
+            List<string> list = new List<string>();
+            for (int i = 1; i < dgv.Columns.Count; i++)
+            {
+                list.Add(dgv.Columns[i].HeaderText);
+            }
+            SearchForm sf = new SearchForm(tableName, list);
+            sf.ShowDialog(this);
+            DataSet ds = new DataSet();
+            if (sf.Filter == null || sf.Value == null)
+                return;
+            db.Load(ds, sf.TableName, sf.Filter, sf.Value);
+            DetailView dv = new DetailView(ds);
+            dv.ShowDialog(this);
+        }
+
+        private void ridicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DetailView("Ridic", dataGridView4);
+        }
+
+        private void adresaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DetailView("Adresa", dataGridView1);
+        }
+
+        private void garazToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DetailView("Garaz", dataGridView2);
+        }
+
+        private void vozidloToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DetailView("Vozidlo", dataGridView3);
         }
     }
 }

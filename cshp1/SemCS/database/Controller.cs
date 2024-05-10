@@ -10,11 +10,14 @@ namespace SemCS
 {
     public class Controller
     {
-        private Garage? garageBuffer;
-
         public Controller()
         {
-            this.garageBuffer = null;
+           
+        }
+
+        public static void WarningDialog(string message)
+        {
+            MessageBox.Show(message, "Upozornění", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         public static void SuccesDialog(string message)
@@ -24,7 +27,7 @@ namespace SemCS
 
         public static void ErrorDialog(string message)
         {
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(message, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

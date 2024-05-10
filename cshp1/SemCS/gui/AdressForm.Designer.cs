@@ -35,6 +35,7 @@
             textBoxNumber = new TextBox();
             textBoxStreet = new TextBox();
             textBoxCity = new TextBox();
+            button2 = new Button();
             SuspendLayout();
             // 
             // label1
@@ -95,11 +96,22 @@
             textBoxCity.Size = new Size(188, 23);
             textBoxCity.TabIndex = 6;
             // 
+            // button2
+            // 
+            button2.Location = new Point(12, 93);
+            button2.Name = "button2";
+            button2.Size = new Size(81, 23);
+            button2.TabIndex = 7;
+            button2.Text = "Remove";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // AdressForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(298, 126);
+            Controls.Add(button2);
             Controls.Add(textBoxCity);
             Controls.Add(textBoxStreet);
             Controls.Add(textBoxNumber);
@@ -124,5 +136,6 @@
         private TextBox textBoxNumber;
         private TextBox textBoxStreet;
         private TextBox textBoxCity;
+        private Button button2;
     }
 }

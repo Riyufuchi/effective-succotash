@@ -20,7 +20,6 @@ namespace SemCS
         private string connectionString;
         private string dbPath = "data.sqlite";
         public SQLiteConnection Connection { get; }
-        private SQLiteCommand sql_cmd;
         private SQLiteDataAdapter adapter;
 
         public Database()
@@ -30,9 +29,20 @@ namespace SemCS
             Connection = new SQLiteConnection(connectionString);
         }
 
-
-
         #region Load
+
+        public void Load(DataSet dataSet, string tableName, string filter, string value)
+        {
+            Connection.Open();
+            adapter = new SQLiteDataAdapter(Connection.CreateCommand());
+            // Use parameterized query to prevent SQL injection
+            adapter.SelectCommand.CommandText = $"SELECT * FROM {tableName} WHERE {filter} = @Value";
+            // Add parameter for the filter value
+            adapter.SelectCommand.Parameters.AddWithValue("@Value", value);
+            adapter.Fill(dataSet, tableName);
+            Connection.Close();
+        }
+
 
         public void LoadAdresses(DataSet dataSet)
         {
@@ -113,7 +123,7 @@ namespace SemCS
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
-                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Ridic WHERE VehicleId = @Id", connection))
+                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Ridic WHERE VozidloId = @Id", connection))
                 {
                     command.Parameters.AddWithValue("@Id", vehicle.Id);
                     result = command.ExecuteNonQuery() > 0;
@@ -137,6 +147,26 @@ namespace SemCS
                             RemoveVehicle(vehicle);
                     }
                     command.Parameters.AddWithValue("@Id", garage.Id);
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+        }
+
+        public void RemoveAdress(Address address)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Adresa WHERE Id = @Id", connection))
+                {
+                    List<Garage> v = SelectGarages();
+                    foreach (Garage g in v)
+                    {
+                        if (g.Address.Id == address.Id)
+                            RemoveGarage(g);
+                    }
+                    command.Parameters.AddWithValue("@Id", address.Id);
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
