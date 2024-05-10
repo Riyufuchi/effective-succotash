@@ -26,11 +26,5 @@ namespace SemCS
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-
-        /*public Garage GarageDialog(DataTable dataTable, Garage garage)
-        {
-            GarageForm gd = new GarageForm(dataTable, garage);
-            gd.ShowDialog(); 
-        }*/
     }
 }

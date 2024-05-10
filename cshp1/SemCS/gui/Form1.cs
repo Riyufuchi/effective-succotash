@@ -12,6 +12,7 @@ namespace SemCS
         private Address? adressBuffer;
         private Garage? garageBuffer;
         private Vehicle? vehicleBuffer;
+        private Driver? driverBuffer;
 
         public Form1()
         {
@@ -38,6 +39,8 @@ namespace SemCS
             db.LoadDrivers(dataSet);
             dataGridView4.DataSource = dataSet.Tables[3];
             dataGridView4.Columns[0].Visible = false;
+            dataGridView4.CellClick += dataGridView4_CellClick;
+            //
             adressBuffer = null;
         }
 
@@ -60,6 +63,13 @@ namespace SemCS
             dataSet.Tables[0].Rows.Clear();
             db.LoadAdresses(dataSet);
             dataGridView1.Refresh();
+        }
+
+        private void RefreshDrivers()
+        {
+            dataSet.Tables[3].Rows.Clear();
+            db.LoadDrivers(dataSet);
+            dataGridView4.Refresh();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -146,6 +156,32 @@ namespace SemCS
             }
         }
 
+        private void dataGridView4_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow clickedRow = dataGridView4.Rows[e.RowIndex];
+
+                DriverForm? df = CreateDriverForm(db.SelectDriver(Int32.Parse(clickedRow.Cells["Id"].Value.ToString())));
+                if (df == null)
+                    return;
+                df.ShowDialog(this);
+                driverBuffer = df.Driver;
+                if (df.Remove)
+                {
+                    db.RemoveDriver(driverBuffer);
+                    RefreshDrivers();
+                    return;
+                }
+                driverBuffer = df.Driver;
+                if (driverBuffer != null)
+                {
+                    db.UpdateDriver(driverBuffer);
+                    RefreshDrivers();
+                }
+            }
+        }
+
         #endregion
 
         private void addAdressToolStripMenuItem_Click(object sender, EventArgs e)
@@ -200,7 +236,51 @@ namespace SemCS
                 db.AddVehicle(vehicleBuffer);
                 RefreshVehicles();
                 RefreshGarages();
-               
+
+            }
+        }
+
+        private DriverForm? CreateDriverForm(Driver? driver)
+        {
+            List<Garage> garages = db.SelectGarages();
+            if (garages.Count == 0)
+            {
+                Controller.ErrorDialog("V databazi nejsou garaze");
+                return null;
+            }
+            List<List<Vehicle>> vehicles = new List<List<Vehicle>>();
+            foreach (Garage garage in garages)
+                vehicles.Add(db.SelectVehicle(garage));
+            List<Garage> garages1 = new List<Garage>();
+            List<List<Vehicle>> vehicles1 = new List<List<Vehicle>>();
+            for (int i = 0; i < garages.Count; i++)
+            {
+                if (vehicles[i].Count != 0)
+                {
+                    garages1.Add(garages[i]);
+                    vehicles1.Add(vehicles[i]);
+                }
+            }
+            if (garages1.Count == 0)
+            {
+                Controller.ErrorDialog("V databazi nejsou vozidla");
+                return null;
+            }
+
+            return new DriverForm(driver, db, garages1, vehicles1);
+        }
+
+        private void addDriverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DriverForm? df = CreateDriverForm(null);
+            if (df == null)
+                return;
+            df.ShowDialog(this);
+            driverBuffer = df.Driver;
+            if (driverBuffer != null)
+            {
+                db.AddDriver(driverBuffer);
+                RefreshDrivers();
             }
         }
     }

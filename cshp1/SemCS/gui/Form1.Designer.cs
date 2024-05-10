@@ -105,6 +105,7 @@
             addDriverToolStripMenuItem.Name = "addDriverToolStripMenuItem";
             addDriverToolStripMenuItem.Size = new Size(180, 22);
             addDriverToolStripMenuItem.Text = "Add Driver";
+            addDriverToolStripMenuItem.Click += addDriverToolStripMenuItem_Click;
             // 
             // windowToolStripMenuItem
             // 

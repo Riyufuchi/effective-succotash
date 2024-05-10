@@ -107,6 +107,8 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
             Name = "AdressForm";
             Text = "AdressForm";
             ResumeLayout(false);

@@ -18,7 +18,7 @@ namespace SemCS
                 // Populate text boxes with existing address data
                 textBoxCity.Text = address.City;
                 textBoxStreet.Text = address.Street;
-                textBoxNumber.Text = address.HouseNumber.ToString();
+                textBoxNumber.Text = address.HouseNumber;
             }
             else
             {
@@ -41,14 +41,14 @@ namespace SemCS
             if (Address == null)
             {
                 // If adding a new address
-                Address = new Address(textBoxCity.Text, textBoxStreet.Text, int.Parse(textBoxNumber.Text));
+                Address = new Address(textBoxCity.Text, textBoxStreet.Text, textBoxNumber.Text);
             }
             else
             {
                 // If editing an existing address
                 Address.City = textBoxCity.Text;
                 Address.Street = textBoxStreet.Text;
-                Address.HouseNumber = int.Parse(textBoxNumber.Text);
+                Address.HouseNumber = textBoxNumber.Text;
             }
 
             // Close the form

@@ -36,6 +36,11 @@ namespace SemCS
             GarageId = garageId;
             this.Garage = garage;
         }
+
+        public override string ToString()
+        {
+            return LicensePlate + " " + Brand + " " + SeatCount;
+        }
     }
 
     public class Driver
@@ -45,17 +50,33 @@ namespace SemCS
         public string LastName { get; set; }
         public int Salary { get; set; }
         public int HomeBase { get; set; }
+        public int VehicleId { get; set; }
         public Garage HomeBaseGarage { get; set; }
+        public Vehicle Vehicle { get; set; }
 
         //public Driver() { }
 
-        public Driver(string firstName, string lastName, int salary, int homeBase, Garage HomeBaseGarage)
+        public Driver(string firstName, string lastName, int salary, int homeBase, int vehicleId, Garage HomeBaseGarage, Vehicle vehicle)
         {
             FirstName = firstName;
             LastName = lastName;
             Salary = salary;
             HomeBase = homeBase;
+            VehicleId = vehicleId;
             this.HomeBaseGarage = HomeBaseGarage;
+            Vehicle = vehicle;
+        }
+
+        public Driver(int id, string firstName, string lastName, int salary, int homeBase, int vehicleId, Garage HomeBaseGarage, Vehicle vehicle)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Salary = salary;
+            HomeBase = homeBase;
+            VehicleId = vehicleId;
+            this.HomeBaseGarage = HomeBaseGarage;
+            Vehicle = vehicle;
         }
     }
 
@@ -78,18 +99,18 @@ namespace SemCS
         public int Id { get; private set; }
         public string City { get; set; }
         public string Street { get; set; }
-        public int HouseNumber { get; set; }
+        public string HouseNumber { get; set; }
 
         // public Address() { }
 
-        public Address(string city, string street, int houseNumber)
+        public Address(string city, string street, string houseNumber)
         {
             City = city;
             Street = street;
             HouseNumber = houseNumber;
         }
 
-        public Address(int id, string city, string street, int houseNumber)
+        public Address(int id, string city, string street, string houseNumber)
         {
             Id = id;
             City = city;

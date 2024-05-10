@@ -15,7 +15,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SemCS
 {
-    internal class Database
+    public class Database
     {
         private string connectionString;
         private string dbPath = "data.sqlite";
@@ -82,10 +82,45 @@ namespace SemCS
                 {
                     command.Parameters.AddWithValue("@Id", vehicle.Id);
                     if (command.ExecuteNonQuery() > 0)
+                    {
                         UpdateGarage(vehicle.GarageId, 1);
+                        RemoveDriver(vehicle);
+                    }
                 }
                 connection.Close();
             }
+        }
+
+        public bool RemoveDriver(Driver driver)
+        {
+            bool result = false;
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Ridic WHERE Id = @Id", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", driver.Id);
+                    result = command.ExecuteNonQuery() > 0;
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+        public bool RemoveDriver(Vehicle vehicle)
+        {
+            bool result = false;
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("DELETE FROM Ridic WHERE VehicleId = @Id", connection))
+                {
+                    command.Parameters.AddWithValue("@Id", vehicle.Id);
+                    result = command.ExecuteNonQuery() > 0;
+                }
+                connection.Close();
+            }
+            return result;
         }
 
         public void RemoveGarage(Garage garage)
@@ -157,6 +192,22 @@ namespace SemCS
             }
         }
 
+        public void AddDriver(Driver driver)
+        {
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = new SQLiteCommand("INSERT INTO Ridic (Jmeno, Prijmeni, Plat, HomeBase, VozidloId) VALUES (@Jmeno, @Prijmeni, @Plat, @HomeBase, @VozidloId)", connection);
+                cmd.Parameters.AddWithValue("@Jmeno", driver.FirstName);
+                cmd.Parameters.AddWithValue("@Prijmeni", driver.LastName);
+                cmd.Parameters.AddWithValue("@Plat", driver.Salary);
+                cmd.Parameters.AddWithValue("@HomeBase", driver.HomeBase);
+                cmd.Parameters.AddWithValue("@VozidloId", driver.VehicleId);
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
         #endregion
 
         #region Update
@@ -198,6 +249,24 @@ namespace SemCS
                 }
             }
         }
+
+        public void UpdateDriver(Driver driver)
+        {
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = new SQLiteCommand("UPDATE Ridic SET Jmeno = @Jmeno, Prijmeni = @Prijmeni, Plat = @Plat, HomeBase = @HomeBase, VozidloId = @VozidloId WHERE Id = @Id", connection);
+                cmd.Parameters.AddWithValue("@Jmeno", driver.FirstName);
+                cmd.Parameters.AddWithValue("@Prijmeni", driver.LastName);
+                cmd.Parameters.AddWithValue("@Plat", driver.Salary);
+                cmd.Parameters.AddWithValue("@HomeBase", driver.HomeBase);
+                cmd.Parameters.AddWithValue("@VozidloId", driver.VehicleId);
+                cmd.Parameters.AddWithValue("@Id", driver.Id);
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
 
         public void UpdateGarage(Garage garage)
         {
@@ -258,7 +327,7 @@ namespace SemCS
                         if (reader.Read())
                         {
                             return new Address(Convert.ToInt32(reader["Id"]), reader["Mesto"].ToString(),
-                                reader["Ulice"].ToString(), Convert.ToInt32(reader["CP"]));
+                                reader["Ulice"].ToString(), reader["CP"].ToString());
                         }
                     }
                 }
@@ -313,6 +382,58 @@ namespace SemCS
             return vehicles;
         }
 
+        public Driver? SelectDriver(int id)
+        {
+            Driver? driver = null;
+            Vehicle? vehicle = null;
+            Garage? garage = null;
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                var cmd = new SQLiteCommand("SELECT * FROM Ridic WHERE Id = @Id", connection);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        garage = SelectGarage(Convert.ToInt32(reader["HomeBase"]));
+                        vehicle = SelectVehicle(Convert.ToInt32(reader["VozidloId"]));
+                        driver = new Driver(Convert.ToInt32(reader["Id"]), reader["Jmeno"].ToString(), reader["Prijmeni"].ToString(),
+                            Convert.ToInt32(reader["Plat"]), garage.Id, vehicle.Id, garage, vehicle);
+                    }
+                }
+                connection.Close();
+            }
+            return driver;
+        }
+
+
+        public List<Vehicle> SelectVehicle(Garage garazId)
+        {
+            List<Vehicle> vehicles = new List<Vehicle>();
+            Garage? garage = garazId;
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Vozidlo WHERE GarazId = @GarazId", connection))
+                {
+                    command.Parameters.AddWithValue("@GarazId", garazId.Id);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            vehicles.Add(new Vehicle(Convert.ToInt32(reader["Id"]), reader["SPZ"].ToString(),
+                                 reader["Znacka"].ToString(), Convert.ToInt32(reader["PocetMist"]), garage.Id, garage));
+                        }
+                    }
+                }
+            }
+            return vehicles;
+        }
+
         public List<Address> SelectAddress()
         {
             List<Address> addresses = new List<Address>();
@@ -326,7 +447,7 @@ namespace SemCS
                         while (reader.Read())
                         {
                             addresses.Add(new Address(Convert.ToInt32(reader["Id"]), reader["Mesto"].ToString(),
-                                reader["Ulice"].ToString(), Convert.ToInt32(reader["CP"])));
+                                reader["Ulice"].ToString(), reader["CP"].ToString()));
                         }
                     }
                 }
@@ -357,6 +478,30 @@ namespace SemCS
                 }
             }
             return null;
+        }
+
+        public List<Garage> SelectGarages()
+        {
+            List<Garage> garages = new List<Garage>();
+            Address? address = null;
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Garaz", connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            address = SelectAddress(Convert.ToInt32(reader["AdresaId"]));
+                            garages.Add(new Garage(Convert.ToInt32(reader["Id"]), Convert.ToInt32(reader["Kapacita"]),
+                               Convert.ToInt32(reader["VolnaMista"]), address.Id, address));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return garages;
         }
 
         public List<Garage> SelectFreeGarages()
@@ -422,22 +567,16 @@ namespace SemCS
                 Prijmeni TEXT NOT NULL,
                 Plat INTEGER NOT NULL,
                 HomeBase INTEGER NOT NULL,
-                FOREIGN KEY (HomeBase) REFERENCES Garaz(Id)
-                );",
-                @"
-                CREATE TABLE IF NOT EXISTS SpojovaTabulka (
-                RidicId INTEGER NOT NULL,
                 VozidloId INTEGER NOT NULL,
-                FOREIGN KEY (RidicId) REFERENCES Ridic(Id),
-                FOREIGN KEY (VozidloId) REFERENCES Vozidlo(Id),
-                PRIMARY KEY (RidicId, VozidloId)
+                FOREIGN KEY (HomeBase) REFERENCES Garaz(Id),
+                FOREIGN KEY (VozidloId) REFERENCES Vozidlo(Id)
                 );",
                 @"
                 CREATE TABLE IF NOT EXISTS Adresa (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Mesto TEXT NOT NULL,
                 Ulice TEXT NOT NULL,
-                CP INTEGER NOT NULL
+                CP TEXT NOT NULL
                 );"
                };
 
